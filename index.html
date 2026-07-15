@@ -164,16 +164,62 @@
   const externalCourses=[
     ['01K4M1SFWWJFMKR8EYR43JKW7G','新思想总论'],['01K4M1T2C2H4520FETYM7P2DK2','经济建设'],['01K4M1TKE5BFFJVZJSNNY13JS1','政治建设'],['01K4M1TZY1CVRMRC8617BF2WS6','文化建设'],['01K4M1VEN1KV5TSE83QQ02FFQM','社会建设'],['01K4M1VWX3ZX9S09ESD67J6TA8','生态文明建设'],['01K4M1WAG5RZ52R4TSS7456M0Z','法治建设'],['01K4M1WWSXVV1BKFPVBE0VVMQS','国家和军队建设'],['01K4M1X99FG6YTQTXF83ES4TCC','党的建设'],['01K4M1XSN4RRCN8RQJJD72N0BS','和平外交建设'],['01K4M1YFKQVE7S42KAZAQ1033S','理论与政策-其他']
   ].map(([id,name])=>({id,name,url:`https://www.shangancheng.com/knowledge/summary/${id}`}));
-  const defaults={tasks:[
-    {id:101,title:'资料分析：速算技巧训练',subject:'行测',minutes:50,date:today,slot:'早晨',detail:'完成 25 题，正确率达到 80%',done:false},
-    {id:102,title:'晨读：申论规范表达积累',subject:'申论',minutes:30,date:today,slot:'上午',detail:'摘录 8 个高频表述',done:false},
-    {id:103,title:'判断推理：图形推理专项',subject:'行测',minutes:60,date:today,slot:'下午',detail:'目标 30 题',done:false},
-    {id:104,title:'时政常识：本周要点整理',subject:'常识',minutes:35,date:today,slot:'晚上',detail:'形成一页思维导图',done:false}
-  ],answers:[],wrong:[],notes:[],studyLog:[],slots:['早晨','上午','下午','晚上','睡前'],courseDone:[],theme:'light',lastBackup:'',studyMinutes:0,lastStudy:'',streak:0};
+  function buildScientificPlan(){
+    const start=new Date('2026-07-16T00:00:00');
+    const weeks=[
+      ['基础入门','资料分析三大概念与速算','言语中心理解','法律体系与宪法','申论材料阅读'],
+      ['基础入门','资料分析增长率与比重','判断图形与定义','政治经济基础','申论归纳概括'],
+      ['基础入门','言语逻辑填空','判断类比与逻辑','管理与公文基础','申论综合分析'],
+      ['基础入门','数量基础题型','资料综合训练','科技人文常识','申论提出对策'],
+      ['专项强化','资料限时训练','言语限时训练','法律专项刷题','申论概括强化'],
+      ['专项强化','判断限时训练','数量高频题型','政治经济刷题','综应案例分析'],
+      ['专项强化','行测弱项补强','公基错题重做','申论应用文','阶段半套模拟'],
+      ['专项强化','行测速度提升','公基综合训练','申论大作文基础','阶段整套模拟'],
+      ['考试分流','省考行测专项','事业编职测与公基','国央企英语基础','申论与综应分流'],
+      ['考试分流','省考申论套题','事业编综应套题','国央企行业常识','三类考试错题复盘'],
+      ['套卷冲刺','行测或职测整卷','申论或综应整卷','公基查漏补缺','国央企专项模拟'],
+      ['套卷冲刺','全真模拟与时间分配','高频错题清零','政策素材回顾','考前节奏调整']
+    ];
+    const subjects=['行测','行测','常识','申论'];
+    const slots=['早晨','上午','下午','晚上'];
+    const minutes=[50,50,40,40];
+    const tasks=[];
+    weeks.forEach((week,wi)=>{
+      for(let day=0;day<7;day++){
+        const d=new Date(start);d.setDate(start.getDate()+wi*7+day);const date=dateKey(d);
+        if(day===6){
+          tasks.push(
+            {id:120000+wi*100+90,title:`第${wi+1}周复盘：整理错题与学习数据`,subject:'行测',minutes:60,date,slot:'上午',detail:`${week[0]}阶段：统计正确率、耗时和薄弱项`,done:false},
+            {id:120000+wi*100+91,title:`第${wi+1}周检测：综合小测`,subject:'常识',minutes:60,date,slot:'下午',detail:'严格计时，完成后只分析错因',done:false},
+            {id:120000+wi*100+92,title:'下周计划：调整重点与题量',subject:'申论',minutes:40,date,slot:'晚上',detail:'知识不会/方法错误/审题失误/计算失误四类归因',done:false}
+          );
+          continue;
+        }
+        const rotate=day%4;
+        for(let i=0;i<4;i++){
+          const idx=(i+rotate)%4;
+          const focus=week[idx+1];
+          const target=wi<4?'理解方法并完成基础练习':wi<8?'完成限时练习，正确率目标 75%':wi<10?'按目标考试要求完成专项训练':'严格模拟考试时间并复盘';
+          tasks.push({id:120000+wi*100+day*10+i,title:`第${wi+1}周｜${focus}`,subject:subjects[idx],minutes:minutes[idx],date,slot:slots[i],detail:target,done:false});
+        }
+        tasks.push({id:120000+wi*100+day*10+8,title:'当日复盘：错题四类归因',subject:'常识',minutes:20,date,slot:'睡前',detail:'记录学习时长、完成题数和正确率',done:false});
+      }
+    });
+    return tasks;
+  }
+  const scientificPlan=buildScientificPlan();
+  const defaults={tasks:[],answers:[],wrong:[],notes:[],studyLog:[],slots:['早晨','上午','下午','晚上','睡前'],courseDone:[],theme:'light',lastBackup:'',studyMinutes:0,lastStudy:'',streak:0,planVersion:0};
   let data=load();data.slots=data.slots?.length?data.slots:[...defaults.slots];data.studyLog=data.studyLog||[];data.courseDone=data.courseDone||[];data.theme=data.theme||'light';let selectedDate=today;let selectedCategory='言语理解';let qIndex=0;let selectedOption=null;let answered=false;let session={right:0,total:0};let timer={seconds:1500,initial:1500,running:false,id:null,taskId:null};
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(defaults)}}
   function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+  function installScientificPlan(){
+    if(Number(data.planVersion||0)>=1)return;
+    const existing=new Set((data.tasks||[]).map(t=>`${t.date}|${t.title}`));
+    data.tasks=[...(data.tasks||[]),...scientificPlan.filter(t=>!existing.has(`${t.date}|${t.title}`))];
+    data.planVersion=1;
+    save();
+  }
   function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2200)}
   function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
   function formatDate(key){const d=new Date(key+'T00:00:00');return `${d.getMonth()+1}月${d.getDate()}日`}
@@ -218,7 +264,7 @@
   function importData(file){const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);data={...defaults,...(parsed.data||parsed)};save();renderAll();$('#dataDialog').close();toast('数据已恢复')}catch{alert('备份文件无法识别')}};reader.readAsText(file)}
   function renderAll(){applyTheme(data.theme);renderHeader();renderToday();renderPlan();renderResources();renderBank();renderReview();renderHeatmap();renderSlots();renderDataCenter()}
   document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.closeTask!==undefined)$('#taskDialog').close();if(b.dataset.view)switchView(b.dataset.view);if(b.dataset.courseToggle){const id=b.dataset.courseToggle;data.courseDone=data.courseDone.includes(id)?data.courseDone.filter(x=>x!==id):[...data.courseDone,id];save();renderResources();toast(data.courseDone.includes(id)?'课程已标记完成':'已取消完成标记')}if(b.dataset.openPaper)openStoredPaper(b.dataset.openPaper);if(b.dataset.deletePaper&&confirm('确定从本机删除这份题本吗？'))deleteStoredPaper(b.dataset.deletePaper);if(b.dataset.themeChoice){applyTheme(b.dataset.themeChoice);renderDataCenter();toast(b.dataset.themeChoice==='dark'?'已切换夜间模式':'已切换白天模式')}if(b.dataset.removeSlot!==undefined&&data.slots.length>1){const removed=data.slots[Number(b.dataset.removeSlot)];data.slots.splice(Number(b.dataset.removeSlot),1);data.tasks.forEach(t=>{if(t.slot===removed)t.slot=data.slots[0]});save();renderSlots();renderPlan()}if(b.dataset.taskToggle)toggleTask(Number(b.dataset.taskToggle));if(b.dataset.editTask)openTask(Number(b.dataset.editTask));if(b.dataset.deleteTask)deleteTask(Number(b.dataset.deleteTask));if(b.dataset.timerTask)openTimer(Number(b.dataset.timerTask));if(b.dataset.date){selectedDate=b.dataset.date;renderPlan()}if(b.dataset.category){selectedCategory=b.dataset.category;qIndex=0;renderBank()}if(b.dataset.option!==undefined&&!answered){selectedOption=Number(b.dataset.option);$$('.option').forEach(o=>o.classList.remove('selected'));b.classList.add('selected');$('#submitAnswer').disabled=false}if(b.dataset.master){const w=data.wrong.find(x=>x.id===Number(b.dataset.master)&&!x.mastered);if(w)w.mastered=true;save();renderReview();renderToday()}if(b.dataset.deleteNote){data.notes=data.notes.filter(n=>n.id!==Number(b.dataset.deleteNote));save();renderReview()}if(b.dataset.action==='add')openTask(null,today);if(b.dataset.action==='timer')openTimer();if(b.dataset.action==='quiz'){switchView('bank')}if(b.dataset.action==='note'){switchView('review');setTimeout(()=>$('#noteContent').focus(),100)}});
-  $('#taskForm').addEventListener('submit',saveTaskFromForm);$('#addTaskBtn').onclick=()=>openTask();$('#manageSlotsBtn').onclick=()=>{renderSlots();$('#slotDialog').showModal()};$('#closeSlots').onclick=()=>$('#slotDialog').close();$('#addSlot').onclick=()=>{const value=$('#newSlot').value.trim();if(value&&!data.slots.includes(value)){data.slots.push(value);$('#newSlot').value='';save();renderSlots();renderPlan();toast('学习时段已添加')}};$('#subjectFilter').onchange=renderPlan;$('#submitAnswer').onclick=submitAnswer;$('#skipQuestion').onclick=()=>{qIndex=(qIndex+1)%filteredQuestions().length;renderQuestion()};$('#noteForm').addEventListener('submit',addNote);$('#startToday').onclick=()=>{const t=data.tasks.find(x=>x.date===today&&!x.done);t?openTimer(t.id):openTask(null,today)};$('#closeTimer').onclick=()=>{$('#timerDialog').close()};$('#timerToggle').onclick=toggleTimer;$('#timerReset').onclick=resetTimer;$$('.preset').forEach(b=>b.onclick=()=>openTimer(null,Number(b.dataset.minutes)));$('#addPaperBtn').onclick=()=>$('#paperFile').click();$('#paperFile').onchange=e=>{if(e.target.files.length)addPapers(e.target.files).catch(()=>alert('试卷导入失败，请确认文件为 PDF。'));e.target.value=''};$('#settingsBtn').onclick=()=>{renderDataCenter();$('#dataDialog').showModal()};$('#closeData').onclick=()=>$('#dataDialog').close();$('#exportBtn').onclick=exportData;$('#exportBtn2').onclick=exportData;$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=e=>e.target.files[0]&&importData(e.target.files[0]);$('#resetBtn').onclick=()=>{if(confirm('确定清空全部任务、错题和复盘记录吗？此操作无法撤销。')){data=structuredClone(defaults);save();renderAll();$('#dataDialog').close();toast('数据已重置')}};$('#clearReviewed').onclick=()=>{data.wrong=data.wrong.filter(w=>!w.mastered);save();toast('已清理掌握记录')};window.addEventListener('beforeunload',()=>clearInterval(timer.id));renderAll();
+  $('#taskForm').addEventListener('submit',saveTaskFromForm);$('#addTaskBtn').onclick=()=>openTask();$('#manageSlotsBtn').onclick=()=>{renderSlots();$('#slotDialog').showModal()};$('#closeSlots').onclick=()=>$('#slotDialog').close();$('#addSlot').onclick=()=>{const value=$('#newSlot').value.trim();if(value&&!data.slots.includes(value)){data.slots.push(value);$('#newSlot').value='';save();renderSlots();renderPlan();toast('学习时段已添加')}};$('#subjectFilter').onchange=renderPlan;$('#submitAnswer').onclick=submitAnswer;$('#skipQuestion').onclick=()=>{qIndex=(qIndex+1)%filteredQuestions().length;renderQuestion()};$('#noteForm').addEventListener('submit',addNote);$('#startToday').onclick=()=>{const t=data.tasks.find(x=>x.date===today&&!x.done);t?openTimer(t.id):openTask(null,today)};$('#closeTimer').onclick=()=>{$('#timerDialog').close()};$('#timerToggle').onclick=toggleTimer;$('#timerReset').onclick=resetTimer;$$('.preset').forEach(b=>b.onclick=()=>openTimer(null,Number(b.dataset.minutes)));$('#addPaperBtn').onclick=()=>$('#paperFile').click();$('#paperFile').onchange=e=>{if(e.target.files.length)addPapers(e.target.files).catch(()=>alert('试卷导入失败，请确认文件为 PDF。'));e.target.value=''};$('#settingsBtn').onclick=()=>{renderDataCenter();$('#dataDialog').showModal()};$('#closeData').onclick=()=>$('#dataDialog').close();$('#exportBtn').onclick=exportData;$('#exportBtn2').onclick=exportData;$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=e=>e.target.files[0]&&importData(e.target.files[0]);$('#resetBtn').onclick=()=>{if(confirm('确定清空全部任务、错题和复盘记录吗？此操作无法撤销。')){data=structuredClone(defaults);installScientificPlan();renderAll();$('#dataDialog').close();toast('数据已重置')}};$('#clearReviewed').onclick=()=>{data.wrong=data.wrong.filter(w=>!w.mastered);save();toast('已清理掌握记录')};window.addEventListener('beforeunload',()=>clearInterval(timer.id));installScientificPlan();renderAll();
 })();
 </script>
 </body>
