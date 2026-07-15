@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>上岸计划｜考公学习计划（本地版）</title>
+  <style>
+    :root{
+      --paper:#fffaf0;--paper-2:#fff4dd;--ink:#22304a;--muted:#758094;
+      --sun:#f46f3c;--sun-deep:#db5427;--yellow:#ffd66b;--green:#3e9470;
+      --line:#eadfca;--white:#fffefa;--shadow:0 18px 45px rgba(71,49,24,.10);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+    button{font:inherit}
+    .page{min-height:100vh;overflow:hidden;position:relative;padding-bottom:46px;background:radial-gradient(circle at 83% 1%,rgba(255,214,107,.42),transparent 27%),linear-gradient(135deg,#fffdf7 0%,#fff8e9 100%)}
+    .sun-orb{position:absolute;right:118px;top:-74px;width:230px;height:230px;border-radius:50%;background:rgba(255,211,102,.45);box-shadow:0 0 0 30px rgba(255,211,102,.10),0 0 0 60px rgba(255,211,102,.06)}
+    header{height:94px;padding:0 64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(234,223,202,.75);position:relative;z-index:2}
+    .brand{display:flex;align-items:center;gap:15px;font-weight:850;font-size:25px;letter-spacing:-.5px}
+    .mark{width:42px;height:42px;border-radius:14px 14px 18px 18px;background:var(--sun);position:relative;box-shadow:0 8px 18px rgba(244,111,60,.28)}
+    .mark:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:var(--yellow);top:8px;left:14px;box-shadow:0 0 0 4px rgba(255,255,255,.32)}
+    .mark:before{content:"";position:absolute;width:20px;height:6px;border-radius:8px 8px 2px 2px;background:#fff;left:11px;bottom:8px;transform:rotate(-7deg)}
+    nav{display:flex;gap:8px;background:rgba(255,254,250,.66);padding:6px;border:1px solid rgba(234,223,202,.9);border-radius:18px;backdrop-filter:blur(10px)}
+    nav button{border:0;background:transparent;padding:11px 20px;border-radius:13px;color:var(--muted);font-weight:700;cursor:pointer}
+    nav button.active{background:var(--ink);color:#fff;box-shadow:0 7px 14px rgba(34,48,74,.16)}
+    .head-right{display:flex;align-items:center;gap:14px}
+    .streak{background:#fff4d6;border:1px solid #f4d889;border-radius:14px;padding:10px 15px;color:#745d1a;font-weight:750;font-size:14px}
+    .avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff;font-weight:800;border:4px solid rgba(255,255,255,.8)}
+    main{position:relative;z-index:1;width:min(1472px,calc(100% - 48px));margin:0 auto;padding-top:36px}
+    .hero{display:grid;grid-template-columns:1.42fr .78fr;gap:26px;align-items:stretch}
+    .greeting{background:var(--ink);color:#fff;border-radius:32px;padding:34px 38px;min-height:230px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    .greeting:after{content:"";position:absolute;right:-35px;bottom:-80px;width:250px;height:250px;border-radius:50%;border:42px solid rgba(255,214,107,.17)}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:#ffd981;font-size:14px;font-weight:800;letter-spacing:1.5px}
+    .eyebrow span{display:block;width:24px;height:3px;background:var(--sun);border-radius:2px}
+    h1{margin:12px 0 7px;font-size:48px;line-height:1.12;letter-spacing:-2px}
+    .greeting p{margin:0;color:#b9c2d0;font-size:17px}
+    .start-row{display:flex;align-items:center;gap:16px;margin-top:25px}
+    .start{border:0;background:var(--sun);color:#fff;border-radius:15px;padding:13px 22px;font-weight:800;box-shadow:0 9px 18px rgba(244,111,60,.28);cursor:pointer;transition:.2s}
+    .start:hover{transform:translateY(-2px);background:var(--sun-deep)}
+    .duration{font-size:14px;color:#d6dce5}
+    .phase-card{background:var(--white);border:1px solid var(--line);border-radius:32px;padding:30px;box-shadow:var(--shadow)}
+    .phase-top{display:flex;align-items:start;justify-content:space-between}
+    .phase-card h2{margin:3px 0;font-size:22px}
+    .phase-card small{color:var(--muted)}
+    .badge{padding:7px 11px;border-radius:11px;background:#e9f5ee;color:#2c7d59;font-size:12px;font-weight:800}
+    .ring-row{display:flex;align-items:center;gap:22px;margin-top:22px}
+    .ring{width:105px;height:105px;border-radius:50%;background:conic-gradient(var(--sun) 0 62%,#f2eadc 62%);display:grid;place-items:center}
+    .ring:before{content:"";width:77px;height:77px;border-radius:50%;background:var(--white);position:absolute}
+    .ring strong{position:relative;font-size:22px}.ring strong em{font-style:normal;font-size:12px;color:var(--muted)}
+    .phase-meta{flex:1}.phase-meta b{display:block;font-size:15px;margin-bottom:8px}.phase-meta p{margin:5px 0;color:var(--muted);font-size:13px}
+    .lower{display:grid;grid-template-columns:1.16fr .84fr;gap:26px;margin-top:26px}
+    .panel{background:rgba(255,254,250,.92);border:1px solid var(--line);border-radius:28px;padding:27px 29px;box-shadow:0 12px 34px rgba(71,49,24,.07)}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .panel h2{margin:0;font-size:22px}.date{font-size:13px;color:var(--muted);font-weight:700}
+    .progressbar{height:7px;background:#eee6d9;border-radius:8px;overflow:hidden;margin-bottom:17px}.progressbar i{display:block;width:48%;height:100%;background:linear-gradient(90deg,var(--sun),var(--yellow));border-radius:8px}
+    .task{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;padding:13px 6px;border-top:1px solid #f0e8dc}
+    .task:first-of-type{border-top:0}.check{width:26px;height:26px;border-radius:9px;border:2px solid #d8ccb8;background:#fff;display:grid;place-items:center;color:#fff;font-weight:900;cursor:pointer}.check.done{background:var(--green);border-color:var(--green)}
+    .task-title{font-weight:750;font-size:15px}.task-title small{display:block;color:var(--muted);font-weight:500;margin-top:3px}.task.done .task-title{text-decoration:line-through;color:#9298a2}
+    .tag{font-size:12px;font-weight:800;padding:6px 9px;border-radius:9px}.tag.qa{color:#be512d;background:#fff0e9}.tag.sl{color:#2e765a;background:#eaf6ef}.tag.re{color:#53658b;background:#eef1f8}
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .plan{border-radius:22px;padding:22px;min-height:178px;position:relative;overflow:hidden}
+    .plan.qa{background:#fff0e7}.plan.sl{background:#eaf5ee}
+    .plan-number{font:800 12px/1 system-ui;color:rgba(34,48,74,.47);letter-spacing:1px}
+    .plan h3{margin:14px 0 7px;font-size:24px}.plan p{font-size:13px;color:#6b7180;line-height:1.7;margin:0}.plan .arrow{position:absolute;right:17px;bottom:16px;width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.65);font-size:18px}
+    .week{margin-top:16px;background:#fff8e8;border:1px dashed #e8c976;border-radius:19px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+    .week b{font-size:14px}.week span{font-size:12px;color:#8a7747}.dots{display:flex;gap:7px}.dots i{width:9px;height:9px;border-radius:50%;background:#e6d9bc}.dots i.on{background:var(--sun)}
+    @media(max-width:1000px){header{padding:0 24px}nav{display:none}.hero,.lower{grid-template-columns:1fr}.page{overflow:auto}.greeting{min-height:250px}}
+    @media(max-width:620px){header{height:76px}.streak{display:none}main{width:calc(100% - 28px);padding-top:18px}.greeting,.phase-card,.panel{border-radius:22px;padding:24px}.greeting h1{font-size:34px}.greeting h1 br{display:none}.start-row{align-items:flex-start;flex-direction:column}.plans{grid-template-columns:1fr}.ring-row{align-items:flex-start;flex-direction:column}.week{gap:14px;align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="sun-orb"></div>
+  <header>
+    <div class="brand"><div class="mark"></div>上岸计划</div>
+    <nav aria-label="主要导航"><button class="active">今日</button><button>计划</button><button>题库</button><button>复盘</button></nav>
+    <div class="head-right"><div class="streak">🔥 连续学习 12 天</div><div class="avatar">林</div></div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="greeting">
+        <div class="eyebrow"><span></span>7 月 15 日 · 距国考 132 天</div>
+        <h1>早上好，今天也向上岸<br>迈出扎实的一步。</h1>
+        <p>专注完成 4 项任务，预计学习 4 小时 20 分钟。</p>
+        <div class="start-row"><button class="start" id="startBtn">开始今日学习 →</button><div class="duration">首项：资料分析专项 · 50 分钟</div></div>
+      </div>
+      <aside class="phase-card">
+        <div class="phase-top"><div><small>阶段进度</small><h2>强化提升期</h2></div><span class="badge">第 4 / 7 周</span></div>
+        <div class="ring-row"><div class="ring"><strong>62<em>%</em></strong></div><div class="phase-meta"><b>本阶段已学习 68 小时</b><p>行测正确率 72% · ↑ 6%</p><p>申论本周完成 3 / 5 篇</p><p>下一阶段：全真冲刺</p></div></div>
+      </aside>
+    </section>
+    <section class="lower">
+      <div class="panel">
+        <div class="panel-head"><h2>今日学习</h2><span class="date">2 / 4 已完成 · 48%</span></div>
+        <div class="progressbar"><i></i></div>
+        <div class="task done"><button class="check done">✓</button><div class="task-title">资料分析：速算技巧训练<small>50 分钟 · 已完成 25 题，正确率 80%</small></div><span class="tag qa">行测</span></div>
+        <div class="task done"><button class="check done">✓</button><div class="task-title">晨读：申论规范表达积累<small>30 分钟 · 摘录 8 个高频表述</small></div><span class="tag sl">申论</span></div>
+        <div class="task"><button class="check"></button><div class="task-title">判断推理：图形推理专项<small>60 分钟 · 目标 30 题</small></div><span class="tag qa">行测</span></div>
+        <div class="task"><button class="check"></button><div class="task-title">申论：县域振兴材料小题<small>90 分钟 · 归纳概括 + 对策题</small></div><span class="tag sl">申论</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>专项计划</h2><span class="date">查看完整周计划 →</span></div>
+        <div class="plans">
+          <article class="plan qa"><div class="plan-number">01 · XING CE</div><h3>行测计划</h3><p>主攻资料分析与判断推理<br>本周目标：300 题 · 75% 正确率</p><div class="arrow">↗</div></article>
+          <article class="plan sl"><div class="plan-number">02 · SHEN LUN</div><h3>申论计划</h3><p>强化概括与对策题表达<br>本周目标：5 篇 · 2 次精改</p><div class="arrow">↗</div></article>
+        </div>
+        <div class="week"><div><b>本周节奏稳定，继续保持</b><br><span>已达成 4 天学习目标</span></div><div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+  const saved=JSON.parse(localStorage.getItem('shangan-local-tasks')||'[]');
+  document.querySelectorAll('.check').forEach((btn,index)=>{
+    if(saved.includes(index)){btn.classList.add('done');btn.closest('.task').classList.add('done');btn.textContent='✓';}
+    btn.addEventListener('click',()=>{btn.classList.toggle('done');btn.closest('.task').classList.toggle('done');btn.textContent=btn.classList.contains('done')?'✓':'';localStorage.setItem('shangan-local-tasks',JSON.stringify([...document.querySelectorAll('.check')].flatMap((item,i)=>item.classList.contains('done')?[i]:[])));});
+  });
+  document.getElementById('startBtn').addEventListener('click',e=>{e.currentTarget.textContent='专注计时 49:59';});
+</script>
+</body>
+</html>
