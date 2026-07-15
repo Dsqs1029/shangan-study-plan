@@ -167,20 +167,20 @@
   function buildScientificPlan(){
     const start=new Date('2026-07-16T00:00:00');
     const weeks=[
-      ['基础入门','资料分析三大概念与速算','言语中心理解','法律体系与宪法','申论材料阅读'],
-      ['基础入门','资料分析增长率与比重','判断图形与定义','政治经济基础','申论归纳概括'],
-      ['基础入门','言语逻辑填空','判断类比与逻辑','管理与公文基础','申论综合分析'],
-      ['基础入门','数量基础题型','资料综合训练','科技人文常识','申论提出对策'],
-      ['专项强化','资料限时训练','言语限时训练','法律专项刷题','申论概括强化'],
-      ['专项强化','判断限时训练','数量高频题型','政治经济刷题','综应案例分析'],
-      ['专项强化','行测弱项补强','公基错题重做','申论应用文','阶段半套模拟'],
-      ['专项强化','行测速度提升','公基综合训练','申论大作文基础','阶段整套模拟'],
-      ['考试分流','省考行测专项','事业编职测与公基','国央企英语基础','申论与综应分流'],
-      ['考试分流','省考申论套题','事业编综应套题','国央企行业常识','三类考试错题复盘'],
-      ['套卷冲刺','行测或职测整卷','申论或综应整卷','公基查漏补缺','国央企专项模拟'],
-      ['套卷冲刺','全真模拟与时间分配','高频错题清零','政策素材回顾','考前节奏调整']
+      ['行测基础','资料分析三大概念与速算','言语中心理解','判断图形推理入门','公基法律基础'],
+      ['行测基础','资料增长率与比重','言语逻辑填空','判断定义与类比','申论归纳概括'],
+      ['行测基础','数量关系基础题型','资料基期与现期','言语片段阅读','常识政治经济'],
+      ['行测基础','判断逻辑推理','数量工程与行程','资料综合训练','申论提出对策'],
+      ['行测强化','资料分析限时训练','言语理解限时训练','判断推理限时训练','公基法律刷题'],
+      ['行测强化','数量关系高频题型','资料分析速算训练','判断逻辑专项','申论与综应案例'],
+      ['行测强化','行测弱项专项补强','资料分析模块套题','言语判断混合训练','公基高频考点'],
+      ['行测强化','行测做题速度提升','行测半套计时训练','行测错题二次重做','申论应用文'],
+      ['考试分流','省考行测专项','事业编职测专项','国央企行测专项','常识与公基查漏'],
+      ['考试分流','行测模块套卷','事业编职测套卷','国央企笔试模拟','申论与综应分流'],
+      ['套卷冲刺','省考行测整卷','事业编职测整卷','行测弱项清零','申论或综应套题'],
+      ['套卷冲刺','全真行测模拟','高频错题清零','时间分配与取舍策略','考前常识回顾']
     ];
-    const subjects=['行测','行测','常识','申论'];
+    const subjects=['行测','行测','行测','综合辅助'];
     const slots=['早晨','上午','下午','晚上'];
     const minutes=[50,50,40,40];
     const tasks=[];
@@ -189,9 +189,9 @@
         const d=new Date(start);d.setDate(start.getDate()+wi*7+day);const date=dateKey(d);
         if(day===6){
           tasks.push(
-            {id:120000+wi*100+90,title:`第${wi+1}周复盘：整理错题与学习数据`,subject:'行测',minutes:60,date,slot:'上午',detail:`${week[0]}阶段：统计正确率、耗时和薄弱项`,done:false},
-            {id:120000+wi*100+91,title:`第${wi+1}周检测：综合小测`,subject:'常识',minutes:60,date,slot:'下午',detail:'严格计时，完成后只分析错因',done:false},
-            {id:120000+wi*100+92,title:'下周计划：调整重点与题量',subject:'申论',minutes:40,date,slot:'晚上',detail:'知识不会/方法错误/审题失误/计算失误四类归因',done:false}
+            {id:120000+wi*100+90,title:`第${wi+1}周行测检测：模块套题`,subject:'行测',minutes:100,date,slot:'上午',detail:`${week[0]}阶段：严格计时并统计各模块正确率与耗时`,done:false},
+            {id:120000+wi*100+91,title:`第${wi+1}周复盘：行测错题重做`,subject:'行测',minutes:40,date,slot:'下午',detail:'知识不会/方法错误/审题失误/计算失误四类归因',done:false},
+            {id:120000+wi*100+92,title:'下周计划：调整行测弱项与题量',subject:'综合辅助',minutes:20,date,slot:'晚上',detail:'优先增加正确率低、耗时长的行测模块',done:false}
           );
           continue;
         }
@@ -202,7 +202,7 @@
           const target=wi<4?'理解方法并完成基础练习':wi<8?'完成限时练习，正确率目标 75%':wi<10?'按目标考试要求完成专项训练':'严格模拟考试时间并复盘';
           tasks.push({id:120000+wi*100+day*10+i,title:`第${wi+1}周｜${focus}`,subject:subjects[idx],minutes:minutes[idx],date,slot:slots[i],detail:target,done:false});
         }
-        tasks.push({id:120000+wi*100+day*10+8,title:'当日复盘：错题四类归因',subject:'常识',minutes:20,date,slot:'睡前',detail:'记录学习时长、完成题数和正确率',done:false});
+        tasks.push({id:120000+wi*100+day*10+8,title:'行测复盘：错题四类归因',subject:'行测',minutes:20,date,slot:'睡前',detail:'分模块记录题量、正确率、耗时和错误原因',done:false});
       }
     });
     return tasks;
@@ -214,10 +214,12 @@
   function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{return structuredClone(defaults)}}
   function save(){localStorage.setItem(KEY,JSON.stringify(data))}
   function installScientificPlan(){
-    if(Number(data.planVersion||0)>=1)return;
-    const existing=new Set((data.tasks||[]).map(t=>`${t.date}|${t.title}`));
-    data.tasks=[...(data.tasks||[]),...scientificPlan.filter(t=>!existing.has(`${t.date}|${t.title}`))];
-    data.planVersion=1;
+    if(Number(data.planVersion||0)>=2)return;
+    const oldPlan=(data.tasks||[]).filter(t=>Number(t.id)>=120000&&Number(t.id)<121300);
+    const completedSlots=new Set(oldPlan.filter(t=>t.done).map(t=>`${t.date}|${t.slot}`));
+    const personalTasks=(data.tasks||[]).filter(t=>!(Number(t.id)>=120000&&Number(t.id)<121300));
+    data.tasks=[...personalTasks,...scientificPlan.map(t=>({...t,done:completedSlots.has(`${t.date}|${t.slot}`)}))];
+    data.planVersion=2;
     save();
   }
   function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2200)}
